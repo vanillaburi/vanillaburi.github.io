@@ -183,6 +183,7 @@
 
   if (sessionStorage.getItem('vb_admin_ok') === 'yes') {
     document.body.classList.remove('locked');
+    document.getElementById('lockScreen').style.display = 'none';
   }
   document.getElementById('lockBtn').addEventListener('click', checkPassword);
   document.getElementById('lockInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
@@ -191,6 +192,7 @@
     if (val === ADMIN_PASSWORD) {
       sessionStorage.setItem('vb_admin_ok', 'yes');
       document.body.classList.remove('locked');
+      document.getElementById('lockScreen').style.display = 'none';
     } else {
       document.getElementById('lockErr').textContent = 'รหัสผ่านไม่ถูกต้อง';
     }
