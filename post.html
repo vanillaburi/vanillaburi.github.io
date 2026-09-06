@@ -63,6 +63,41 @@
         <div class="body">${marked.parse(post.body || '')}</div>
       `;
       document.title = post.title + ' — VanillaBuri วนิลาบุรี';
+
+      const url = 'https://vanillaburi.github.io/post.html?slug=' + post.slug;
+      const cover = 'https://vanillaburi.github.io/' + post.cover;
+      const setMeta = (attr, key, content) => {
+        let el = document.querySelector(`meta[${attr}="${key}"]`);
+        if (!el) { el = document.createElement('meta'); el.setAttribute(attr, key); document.head.appendChild(el); }
+        el.setAttribute('content', content);
+      };
+      setMeta('name', 'description', post.excerpt);
+      setMeta('property', 'og:type', 'article');
+      setMeta('property', 'og:title', post.title);
+      setMeta('property', 'og:description', post.excerpt);
+      setMeta('property', 'og:image', cover);
+      setMeta('property', 'og:url', url);
+      setMeta('name', 'twitter:card', 'summary_large_image');
+      setMeta('name', 'twitter:title', post.title);
+      setMeta('name', 'twitter:description', post.excerpt);
+
+      let canonical = document.querySelector('link[rel="canonical"]');
+      if (!canonical) { canonical = document.createElement('link'); canonical.setAttribute('rel', 'canonical'); document.head.appendChild(canonical); }
+      canonical.setAttribute('href', url);
+
+      const ld = document.createElement('script');
+      ld.type = 'application/ld+json';
+      ld.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": post.title,
+        "description": post.excerpt,
+        "image": cover,
+        "datePublished": post.date,
+        "author": { "@type": "Organization", "name": "VanillaBuri วนิลาบุรี" },
+        "publisher": { "@type": "Organization", "name": "VanillaBuri วนิลาบุรี", "logo": "https://vanillaburi.github.io/assets/logo.jpg" }
+      });
+      document.head.appendChild(ld);
     })
     .catch(() => {
       document.getElementById('postRoot').innerHTML = '<p class="eyebrow">โหลดบทความไม่สำเร็จ</p>';
