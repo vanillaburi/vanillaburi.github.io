@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VanillaBuri — วนิลาบุรี | วานิลลาไทย จากต้นกล้าสู่ฝักบ่ม</title>
+<meta name="description" content="วนิลาบุรี ฟาร์มวานิลลาไทย ปลูกและบ่มเองที่ลพบุรี จำหน่ายต้นกล้าวานิลลา ฝักวานิลลาสด และฝักวานิลลาบ่มสำหรับเชฟ เบเกอรี่ และธุรกิจอาหาร">
+<meta name="keywords" content="วนิลาบุรี,VanillaBuri,ต้นวานิลลา,ฝักวานิลลา,ฝักวานิลลาบ่ม,วานิลลาไทย,Vanilla planifolia,Thai Vanilla,ฝักวานิลลาสำหรับเชฟ,ฝักวานิลลาสำหรับเบเกอรี่">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#1C1410;
+    --espresso:#2A1D16;
+    --panel:#251A13;
+    --panel-line:#3B2A1F;
+    --cream:#F3EEDC;
+    --cream-dim:#C9C2AC;
+    --vine:#4A5D3A;
+    --sage:#8FA07C;
+    --gold:#C9A15C;
+    --gold-bright:#DDB876;
+    --gold-soft:rgba(201,161,92,.14);
+    --serif:"Noto Serif Thai",serif;
+    --sans:"IBM Plex Sans Thai","IBM Plex Sans",sans-serif;
+    --mono:"IBM Plex Mono",monospace;
+    --max:1180px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--black);
+    color:var(--cream);
+    font-family:var(--sans);
+    font-weight:300;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{display:block;max-width:100%}
+  a{color:inherit;text-decoration:none}
+  ul{list-style:none}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:.01em}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:.72rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--gold);
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--gold)}
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:14px 26px;
+    border-radius:2px;
+    font-family:var(--sans);
+    font-size:.95rem;
+    font-weight:500;
+    cursor:pointer;
+    border:1px solid transparent;
+    transition:transform .25s ease, background .25s ease, border-color .25s ease;
+  }
+  .btn:hover{transform:translateY(-2px)}
+  .btn-gold{background:var(--gold);color:var(--black)}
+  .btn-gold:hover{background:var(--gold-bright)}
+  .btn-ghost{border-color:var(--panel-line);color:var(--cream)}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold-bright)}
+
+  /* reveal on scroll */
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .8s ease,transform .8s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    html{scroll-behavior:auto}
+  }
+
+  /* ===== NAV ===== */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    background:rgba(28,20,16,.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--panel-line);
+  }
+  nav.wrap{display:flex;align-items:center;justify-content:space-between;height:76px}
+  .logo{font-family:var(--serif);font-size:1.25rem;font-weight:700;letter-spacing:.02em}
+  .logo span{color:var(--gold)}
+  .logo-img{height:52px;width:auto;border-radius:6px;background:var(--cream)}
+  .foot-brand .logo-img{height:64px;margin-bottom:14px}
+  .nav-links{display:flex;align-items:center;gap:34px;font-size:.92rem}
+  .nav-links a{color:var(--cream-dim);transition:color .2s}
+  .nav-links a:hover{color:var(--gold)}
+  .nav-cta{padding:10px 20px;font-size:.85rem}
+  .nav-toggle{display:none;background:none;border:none;color:var(--cream);font-size:1.6rem;cursor:pointer}
+  @media (max-width:860px){
+    .nav-links{position:fixed;top:76px;left:0;right:0;background:var(--espresso);flex-direction:column;padding:28px 24px;gap:22px;border-bottom:1px solid var(--panel-line);transform:translateY(-130%);transition:transform .35s ease}
+    .nav-links.open{transform:translateY(0)}
+    .nav-toggle{display:block}
+  }
+
+  /* ===== HERO ===== */
+  .hero{
+    position:relative;
+    padding:190px 0 120px;
+    overflow:hidden;
+    background:
+      radial-gradient(ellipse 60% 50% at 82% 8%, rgba(74,93,58,.35), transparent 60%),
+      linear-gradient(180deg,var(--black),var(--espresso) 120%);
+  }
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center}
+  @media (max-width:900px){.hero-grid{grid-template-columns:1fr}}
+  .hero h1{font-size:clamp(2.3rem,4.6vw,3.6rem);line-height:1.22;margin:22px 0 22px;color:var(--cream)}
+  .hero h1 em{font-style:normal;color:var(--gold-bright)}
+  .hero p{font-size:1.05rem;color:var(--cream-dim);max-width:46ch;margin-bottom:36px}
+  .hero-ctas{display:flex;gap:16px;flex-wrap:wrap}
+  .hero-photo{border:1px solid var(--panel-line);overflow:hidden}
+  .hero-photo img{width:100%;height:100%;object-fit:cover;display:block}
+
+  /* ===== SECTION generic ===== */
+  section{padding:110px 0}
+  .section-head{max-width:640px;margin-bottom:56px}
+  .section-head h2{font-size:clamp(1.7rem,3vw,2.3rem);margin-top:14px;color:var(--cream)}
+  .section-head p{color:var(--cream-dim);margin-top:16px;font-size:1rem}
+
+  /* ===== TIERS ===== */
+  .tiers{background:var(--espresso)}
+  .tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--panel-line);border:1px solid var(--panel-line)}
+  @media (max-width:860px){.tier-grid{grid-template-columns:1fr}}
+  .tier{background:var(--espresso);padding:40px 34px;position:relative}
+  .tier h3{font-size:1.4rem;margin:14px 0 12px;color:var(--cream)}
+  .tier p{color:var(--cream-dim);font-size:.92rem;margin-bottom:22px;min-height:70px}
+  .tier .price{font-family:var(--mono);font-size:1.05rem;color:var(--gold-bright);margin-bottom:20px}
+  .tier .price small{color:var(--cream-dim);font-size:.7rem;font-weight:400}
+  .tier.core{background:linear-gradient(180deg,rgba(201,161,92,.08),transparent)}
+  .tier.core::before{content:"แนะนำสำหรับธุรกิจ";position:absolute;top:0;right:0;font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;background:var(--gold);color:var(--black);padding:4px 10px}
+
+  /* ===== FARM / TRUST ===== */
+  .farm{background:var(--black)}
+  .farm-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:70px;align-items:center}
+  @media (max-width:900px){.farm-grid{grid-template-columns:1fr}}
+  .farm-visual{
+    aspect-ratio:4/5;
+    border:1px solid var(--panel-line);
+    position:relative;
+    display:flex;align-items:flex-end;padding:26px;
+    overflow:hidden;
+  }
+  .farm-visual img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+  .farm-visual::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(28,20,16,.85),transparent 55%);z-index:1}
+  .farm-visual .cap{position:relative;z-index:2;font-family:var(--mono);font-size:.7rem;color:var(--cream-dim);letter-spacing:.06em}
+  .farm-list{display:grid;gap:26px;margin-top:30px}
+  .farm-item{display:flex;gap:18px;border-top:1px solid var(--panel-line);padding-top:20px}
+  .farm-item .num{font-family:var(--mono);color:var(--gold);font-size:.85rem;padding-top:2px}
+  .farm-item h4{font-family:var(--sans);font-weight:500;font-size:1.02rem;margin-bottom:6px;color:var(--cream)}
+  .farm-item p{color:var(--cream-dim);font-size:.9rem}
+
+  /* ===== CURING TIMELINE (signature) ===== */
+  .curing{background:var(--espresso);border-top:1px solid var(--panel-line);border-bottom:1px solid var(--panel-line)}
+  .curing .section-head{max-width:720px}
+  .timeline{display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin-top:20px;position:relative}
+  .timeline::before{content:"";position:absolute;top:34px;left:0;right:0;height:1px;background:var(--panel-line)}
+  @media (max-width:960px){.timeline{grid-template-columns:1fr;gap:34px}.timeline::before{display:none}}
+  .tl-step{position:relative;padding-top:0}
+  .tl-dot{width:11px;height:11px;border-radius:50%;background:var(--gold);border:3px solid var(--espresso);position:relative;z-index:2;margin-bottom:18px}
+  @media (max-width:960px){.tl-step{display:flex;gap:18px;align-items:flex-start}.tl-dot{margin-top:6px}}
+  .tl-step h4{font-family:var(--sans);font-weight:500;font-size:.98rem;margin:14px 0 8px;color:var(--cream)}
+  .tl-step p{font-size:.84rem;color:var(--cream-dim)}
+  .curing-banner{margin:8px 0 50px;border:1px solid var(--panel-line)}
+  .curing-banner img{width:100%;height:360px;object-fit:cover;object-position:center 30%;display:block}
+  @media (max-width:700px){.curing-banner img{height:220px}}
+  .curing-note{
+    margin-top:56px;border:1px solid var(--panel-line);padding:22px 26px;
+    font-size:.88rem;color:var(--cream-dim);font-family:var(--mono);
+    border-left:2px solid var(--gold);
+  }
+
+  /* ===== CONTENT / BLOG ===== */
+  .content-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+  @media (max-width:860px){.content-grid{grid-template-columns:1fr}}
+  .post{border:1px solid var(--panel-line);padding:28px;transition:border-color .25s;display:block}
+  .post:hover{border-color:var(--gold)}
+  .post img{width:calc(100% + 56px);margin:-28px -28px 20px -28px;height:170px;object-fit:cover;display:block}
+  .post .eyebrow{margin-bottom:16px}
+  .post h3{font-size:1.08rem;font-weight:500;font-family:var(--sans);color:var(--cream);margin-bottom:10px;line-height:1.5}
+  .post p{font-size:.86rem;color:var(--cream-dim)}
+
+  /* ===== B2B ===== */
+  .b2b{background:var(--black)}
+  .b2b-panel{
+    border:1px solid var(--panel-line);
+    display:grid;grid-template-columns:1fr 1fr;
+    background:var(--panel);
+  }
+  @media (max-width:900px){.b2b-panel{grid-template-columns:1fr}}
+  .b2b-info{padding:56px;border-right:1px solid var(--panel-line)}
+  @media (max-width:900px){.b2b-info{border-right:none;border-bottom:1px solid var(--panel-line)}}
+  .b2b-info h2{font-size:1.7rem;margin:16px 0 18px}
+  .b2b-info p{color:var(--cream-dim);margin-bottom:26px}
+  .b2b-info ul li{font-size:.88rem;color:var(--cream-dim);padding:10px 0;border-top:1px solid var(--panel-line);display:flex;gap:10px}
+  .b2b-info ul li::before{content:"—";color:var(--gold)}
+  .b2b-form{padding:56px;display:flex;flex-direction:column;gap:16px}
+  .b2b-form input,.b2b-form select,.b2b-form textarea{
+    background:transparent;border:none;border-bottom:1px solid var(--panel-line);
+    color:var(--cream);font-family:var(--sans);font-size:.92rem;padding:10px 2px;
+  }
+  .b2b-form label{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;color:var(--cream-dim);text-transform:uppercase}
+  .b2b-form input:focus,.b2b-form select:focus,.b2b-form textarea:focus{outline:none;border-color:var(--gold)}
+  .b2b-form button{margin-top:8px}
+
+  /* ===== FOOTER ===== */
+  footer{background:var(--espresso);border-top:1px solid var(--panel-line);padding:70px 0 30px}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;padding-bottom:50px}
+  @media (max-width:760px){.foot-grid{grid-template-columns:1fr 1fr}}
+  .foot-grid h5{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+  .foot-grid a,.foot-grid li{font-size:.88rem;color:var(--cream-dim);display:block;margin-bottom:10px}
+  .foot-grid a:hover{color:var(--gold-bright)}
+  .foot-brand p{color:var(--cream-dim);font-size:.9rem;max-width:34ch;margin-top:14px}
+  .foot-bottom{border-top:1px solid var(--panel-line);padding-top:26px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.78rem;color:var(--cream-dim)}
+  .foot-bottom .kw{font-family:var(--mono);font-size:.72rem;opacity:.55;max-width:60ch}
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <a href="#" class="logo"><img class="logo-img" src="assets/logo.jpg" alt="VanillaBuri วนิลาบุรี โลโก้"></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#tiers">สินค้า</a></li>
+      <li><a href="#farm">เกี่ยวกับฟาร์ม</a></li>
+      <li><a href="#curing">การบ่ม</a></li>
+      <li><a href="blog.html">บทความ</a></li>
+      <li><a href="#b2b" class="btn btn-gold nav-cta">สำหรับธุรกิจ</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="เปิดเมนู">☰</button>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">ฟาร์มวานิลลาไทย · ลพบุรี</span>
+      <h1>วานิลลาไทย<br>จาก<em>ต้นกล้า</em> สู่<em>ฝักบ่ม</em>เกรด Gourmet</h1>
+      <p>วนิลาบุรีปลูก ดูแล และบ่มวานิลลาสายพันธุ์ Vanilla planifolia ด้วยมือทุกขั้นตอน ตั้งแต่ต้นกล้าสำหรับผู้เริ่มปลูก ไปจนถึงฝักวานิลลาบ่มสำหรับเชฟและเบเกอรี่ที่ต้องการวัตถุดิบที่ตรวจสอบย้อนกลับได้</p>
+      <div class="hero-ctas">
+        <a href="#tiers" class="btn btn-gold">ดูต้นกล้าและฝักวานิลลา</a>
+        <a href="#b2b" class="btn btn-ghost">สำหรับเชฟ &amp; เบเกอรี่ →</a>
+      </div>
+    </div>
+    <div class="hero-photo">
+      <img src="assets/cover.jpg" alt="ฝักวานิลลาบ่ม วนิลาบุรี">
+    </div>
+  </div>
+</section>
+
+<section class="tiers" id="tiers">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">โครงสร้างสินค้า</span>
+      <h2>สามสิ่งที่เราปลูก จากต้นกล้าสู่ฝักบ่ม</h2>
+      <p>ต้นกล้าคือจุดเริ่มต้นที่พาคุณมารู้จักเรา ฝักสดคือหลักฐานว่าฟาร์มติดฝักได้จริง และฝักบ่มคือเป้าหมายปลายทาง — วัตถุดิบเกรด Gourmet ที่ตรวจสอบย้อนกลับได้ทุกล็อต</p>
+    </div>
+    <div class="tier-grid reveal">
+      <div class="tier">
+        <h3>ต้นกล้าวานิลลา</h3>
+        <p>ต้นพันธุ์ Vanilla planifolia เพาะเลี้ยงจากฟาร์มลพบุรี พร้อมคำแนะนำการปลูกและดูแลจากผู้ปลูกจริง</p>
+        <div class="price">เริ่มต้น [XXX]฿ <small>/ ต้น</small></div>
+        <a href="#" class="btn btn-ghost" style="width:100%;justify-content:center">สั่งซื้อต้นกล้า</a>
+      </div>
+      <div class="tier">
+        <h3>ฝักวานิลลาสด</h3>
+        <p>ฝักสดจากต้นที่ผสมเกสรและติดฝักในฟาร์ม เก็บเกี่ยวตามรอบการเจริญเติบโต เหมาะสำหรับผู้ที่ต้องการบ่มเอง</p>
+        <div class="price">สอบถามราคาตามฤดูกาล</div>
+        <a href="#b2b" class="btn btn-ghost" style="width:100%;justify-content:center">สอบถามฝักสด</a>
+      </div>
+      <div class="tier core">
+        <h3>ฝักวานิลลาบ่ม</h3>
+        <p>ฝักบ่มเกรด Gourmet ผ่านกระบวนการ Curing ครบขั้นตอน มี Batch Control สำหรับเชฟ เบเกอรี่ และธุรกิจอาหาร</p>
+        <div class="price">ราคาแบบ B2B <small>ตามปริมาณสั่งซื้อ</small></div>
+        <a href="#b2b" class="btn btn-gold" style="width:100%;justify-content:center">วางแผนออเดอร์กับฟาร์ม</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="farm" id="farm">
+  <div class="wrap farm-grid">
+    <div class="reveal">
+      <div class="farm-visual">
+        <img src="assets/fresh-pods-hand.jpg" alt="ฝักวานิลลาสดจากฟาร์มวนิลาบุรี">
+        <span class="cap">วนิลาบุรี · ลพบุรี, ประเทศไทย</span>
+      </div>
+    </div>
+    <div class="reveal">
+      <span class="eyebrow">เกี่ยวกับฟาร์ม</span>
+      <h2 style="font-size:clamp(1.7rem,3vw,2.3rem);margin-top:14px;">ปลูกจริง ดูแลเอง ตั้งแต่ต้นจนถึงฝักบ่ม</h2>
+      <div class="farm-list">
+        <div class="farm-item">
+          <span class="num">01</span>
+          <div>
+            <h4>ปลูกที่ลพบุรีด้วยแนวทาง GAP</h4>
+            <p>ทุกต้นเติบโตในฟาร์มของเราเอง ไม่ใช่รับซื้อผ่านคนกลาง ควบคุมคุณภาพได้ตั้งแต่ดิน น้ำ จนถึงการผสมเกสร</p>
+          </div>
+        </div>
+        <div class="farm-item">
+          <span class="num">02</span>
+          <div>
+            <h4>ควบคุมกระบวนการบ่มเองทุกขั้นตอน</h4>
+            <p>กระบวนการ Curing ทำในฟาร์มทุกขั้นตอน เพื่อควบคุมกลิ่น ความชื้น และคุณภาพสุดท้ายของฝัก</p>
+          </div>
+        </div>
+        <div class="farm-item">
+          <span class="num">03</span>
+          <div>
+            <h4>กำลังพัฒนาระบบ Traceability</h4>
+            <p>เรากำลังวางระบบติดตามย้อนกลับตั้งแต่แปลงปลูกถึงล็อตจัดส่ง เพื่อรองรับลูกค้าธุรกิจอาหารในระยะยาว</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="curing" id="curing">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">กระบวนการ</span>
+      <h2>เส้นทางสู่ฝักวานิลลาบ่ม</h2>
+      <p>คำว่า "พรีเมียม" ต้องพิสูจน์ด้วยกระบวนการ ไม่ใช่คำโฆษณา — นี่คือขั้นตอนการบ่มที่ฝักทุกฝักของเราต้องผ่าน</p>
+    </div>
+    <div class="curing-banner reveal">
+      <img src="assets/cured-hand.jpg" alt="ฝักวานิลลาบ่มจากวนิลาบุรี">
+    </div>
+    <div class="timeline reveal">
+      <div class="tl-step">
+        <div class="tl-dot"></div>
+        <h4>เก็บเกี่ยว</h4>
+        <p>คัดฝักที่แก่ได้ที่จากต้นในฟาร์ม</p>
+      </div>
+      <div class="tl-step">
+        <div class="tl-dot"></div>
+        <h4>ลวกน้ำร้อน</h4>
+        <p>หยุดกระบวนการทางชีวภาพของฝัก</p>
+      </div>
+      <div class="tl-step">
+        <div class="tl-dot"></div>
+        <h4>อบเหงื่อ</h4>
+        <p>ห่มผ้าเก็บความร้อน ดึงกลิ่นออกมา</p>
+      </div>
+      <div class="tl-step">
+        <div class="tl-dot"></div>
+        <h4>ผึ่งแดด</h4>
+        <p>ควบคุมความชื้นให้ลดลงอย่างสม่ำเสมอ</p>
+      </div>
+      <div class="tl-step">
+        <div class="tl-dot"></div>
+        <h4>บ่มเก็บกลิ่น</h4>
+        <p>เก็บในที่ควบคุมสภาพอากาศจนกลิ่นเต็มที่</p>
+      </div>
+      <div class="tl-step">
+        <div class="tl-dot"></div>
+        <h4>คัดเกรด</h4>
+        <p>แยกเกรดตามขนาด ความชื้น และกลิ่น</p>
+      </div>
+    </div>
+    <p class="curing-note reveal">หมายเหตุ: ขั้นตอนด้านบนเป็นโครงทั่วไปของการบ่มวานิลลาแบบ Bourbon/Classic method ที่ใช้กันในหลายแหล่งปลูก — ไม่ใช่กระบวนการเฉพาะของวนิลาบุรี กรุณาแก้ไขให้ตรงกับขั้นตอนจริงของฟาร์มก่อนเผยแพร่</p>
+  </div>
+</section>
+
+<section class="content" id="content">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">ความรู้จากฟาร์ม</span>
+      <h2>บทความและองค์ความรู้</h2>
+      <p>เนื้อหาที่ค่อย ๆ สร้างความน่าเชื่อถือ ตั้งแต่การปลูกจนถึงการใช้งานในครัว</p>
+    </div>
+    <div class="content-grid reveal">
+      <a class="post" href="post.html?slug=how-to-grow-vanilla">
+        <img src="assets/vine-trellis.jpg" alt="ต้นวานิลลาบนค้างในฟาร์ม">
+        <span class="eyebrow" style="font-size:.62rem">การปลูก</span>
+        <h3>วิธีปลูกวานิลลา Vanilla planifolia ให้ติดฝักในสภาพอากาศไทย</h3>
+        <p>เงื่อนไขดิน แสง และความชื้นที่ทำให้ต้นวานิลลาออกดอกและติดฝักได้ผลจริง</p>
+      </a>
+      <a class="post" href="post.html?slug=hand-pollination-timing">
+        <img src="assets/fresh-pods-hand.jpg" alt="ฝักวานิลลาสดที่ติดผลบนต้น">
+        <span class="eyebrow" style="font-size:.62rem">การผสมเกสร</span>
+        <h3>การผสมเกสรวานิลลาด้วยมือ ทำไมต้องทำภายในไม่กี่ชั่วโมง</h3>
+        <p>ขั้นตอนและจังหวะเวลาที่มีผลโดยตรงต่อการติดฝักของวานิลลา</p>
+      </a>
+      <a class="post" href="post.html?slug=curing-vanilla-guide">
+        <img src="assets/styled-flatlay.jpg" alt="ฝักวานิลลาบ่มพร้อมใช้ในครัว">
+        <span class="eyebrow" style="font-size:.62rem">การบ่ม</span>
+        <h3>วิธีบ่มวานิลลา (Curing Vanilla) ให้ได้กลิ่นและเกรดที่ต้องการ</h3>
+        <p>เจาะลึกกระบวนการบ่มที่ตัดสินคุณภาพฝักวานิลลาในขั้นตอนสุดท้าย</p>
+      </a>
+    </div>
+    <div style="text-align:center;margin-top:44px">
+      <a href="blog.html" class="btn btn-ghost">ดูบทความทั้งหมด →</a>
+    </div>
+  </div>
+</section>
+
+<section class="b2b" id="b2b">
+  <div class="wrap">
+    <div class="b2b-panel reveal">
+      <div class="b2b-info">
+        <span class="eyebrow">สำหรับธุรกิจ</span>
+        <h2>วางแผนออเดอร์ร่วมกัน — สำหรับเชฟ เบเกอรี่ และผู้ผลิตอาหาร</h2>
+        <p>บอกความต้องการของร้านคุณ ฟาร์มจะช่วยวางแผนปริมาณและรอบส่งมอบที่เหมาะกับธุรกิจคุณ</p>
+        <ul>
+          <li>ฝักวานิลลาบ่มเกรด Gourmet พร้อมข้อมูลย้อนกลับของล็อต</li>
+          <li>วางแผนปริมาณและราคาตามรอบสั่งซื้อร่วมกัน</li>
+          <li>ตัวอย่างสินค้าสำหรับทดลองก่อนสั่งซื้อจริง</li>
+        </ul>
+      </div>
+      <form class="b2b-form" onsubmit="event.preventDefault(); alert('เชื่อมต่อฟอร์มนี้กับอีเมลหรือ LINE OA ก่อนใช้งานจริง');">
+        <div>
+          <label>ชื่อร้าน / กิจการ</label>
+          <input type="text" required>
+        </div>
+        <div>
+          <label>อีเมล หรือ LINE ID</label>
+          <input type="text" required>
+        </div>
+        <div>
+          <label>ประเภทธุรกิจ</label>
+          <select>
+            <option>เบเกอรี่ / ร้านขนม</option>
+            <option>ร้านอาหาร / เชฟ</option>
+            <option>ผู้ผลิตอาหาร / OEM</option>
+            <option>อื่น ๆ</option>
+          </select>
+        </div>
+        <div>
+          <label>ปริมาณที่ต้องการโดยประมาณ</label>
+          <textarea rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-gold">ให้ฟาร์มช่วยวางแผนออเดอร์</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <img class="logo-img" src="assets/logo.jpg" alt="VanillaBuri วนิลาบุรี โลโก้">
+        <p>วนิลาบุรี — ฟาร์มวานิลลาไทย ปลูกและบ่มเองที่ลพบุรี จากต้นกล้าสู่ฝักบ่มเกรด Gourmet</p>
+      </div>
+      <div>
+        <h5>สินค้า</h5>
+        <a href="#tiers">ต้นกล้าวานิลลา</a>
+        <a href="#tiers">ฝักวานิลลาสด</a>
+        <a href="#tiers">ฝักวานิลลาบ่ม</a>
+      </div>
+      <div>
+        <h5>เกี่ยวกับเรา</h5>
+        <a href="#farm">เรื่องราวฟาร์ม</a>
+        <a href="#curing">กระบวนการบ่ม</a>
+        <a href="blog.html">บทความ</a>
+      </div>
+      <div>
+        <h5>ติดต่อ</h5>
+        <a href="#b2b">ลูกค้าธุรกิจ</a>
+        <a href="#" id="link-facebook">Facebook</a>
+        <a href="#" id="link-line">LINE</a>
+        <a href="#" id="link-instagram">Instagram</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 VanillaBuri — วนิลาบุรี</span>
+      <span class="kw">วานิลลาไทย · ต้นวานิลลา · ฝักวานิลลาแท้ · ฝักวานิลลาบ่ม · Thai Vanilla Bean</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  fetch('content/settings.json')
+    .then(r => r.json())
+    .then(s => {
+      const map = { 'link-facebook': s.facebook, 'link-line': s.line, 'link-instagram': s.instagram };
+      Object.entries(map).forEach(([id, url]) => {
+        const el = document.getElementById(id);
+        if (el && url) { el.href = url; el.target = '_blank'; el.rel = 'noopener'; }
+      });
+    })
+    .catch(() => {});
+</script>
+</body>
+</html>

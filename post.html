@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>บทความ — VanillaBuri วนิลาบุรี</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
+<style>
+  :root{
+    --black:#1C1410; --espresso:#2A1D16; --panel-line:#3B2A1F;
+    --cream:#F3EEDC; --cream-dim:#C9C2AC; --gold:#C9A15C; --gold-bright:#DDB876;
+    --serif:"Noto Serif Thai",serif; --sans:"IBM Plex Sans Thai",sans-serif; --mono:"IBM Plex Mono",monospace;
+    --max:760px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--black);color:var(--cream);font-family:var(--sans);font-weight:300;line-height:1.8}
+  a{color:var(--gold)}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--cream)}
+  header{position:sticky;top:0;z-index:50;background:rgba(28,20,16,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--panel-line)}
+  nav.wrap{display:flex;align-items:center;justify-content:space-between;height:76px;max-width:1180px}
+  .logo-img{height:48px;border-radius:6px;background:var(--cream)}
+  .back{font-size:.88rem;color:var(--cream-dim);text-decoration:none}
+  .back:hover{color:var(--gold)}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+  article{padding:70px 0 110px}
+  .cover{width:100%;height:320px;object-fit:cover;border:1px solid var(--panel-line);margin:24px 0 40px}
+  h1.title{font-size:clamp(1.8rem,4vw,2.5rem);margin:14px 0 10px}
+  .meta{font-family:var(--mono);font-size:.72rem;color:var(--cream-dim)}
+  .body p{margin-bottom:20px;color:var(--cream-dim);font-size:1rem}
+  .body h2{margin:34px 0 14px;font-size:1.35rem}
+  .body strong{color:var(--cream)}
+  .body ul,.body ol{margin:0 0 20px 24px;color:var(--cream-dim)}
+</style>
+</head>
+<body>
+<header>
+  <nav class="wrap">
+    <a href="index.html"><img class="logo-img" src="assets/logo.jpg" alt="VanillaBuri วนิลาบุรี"></a>
+    <a href="blog.html" class="back">← กลับหน้าบทความ</a>
+  </nav>
+</header>
+
+<article class="wrap" id="postRoot">
+  <p class="eyebrow">กำลังโหลด...</p>
+</article>
+
+<script>
+  const slug = new URLSearchParams(location.search).get('slug');
+  fetch('content/posts.json')
+    .then(r => r.json())
+    .then(posts => {
+      const post = posts.find(p => p.slug === slug);
+      const root = document.getElementById('postRoot');
+      if (!post) { root.innerHTML = '<p class="eyebrow">ไม่พบบทความนี้</p>'; return; }
+      root.innerHTML = `
+        <span class="eyebrow">${post.category}</span>
+        <h1 class="title">${post.title}</h1>
+        <span class="meta">${post.date}</span>
+        <img class="cover" src="${post.cover}" alt="${post.title}">
+        <div class="body">${marked.parse(post.body || '')}</div>
+      `;
+      document.title = post.title + ' — VanillaBuri วนิลาบุรี';
+    })
+    .catch(() => {
+      document.getElementById('postRoot').innerHTML = '<p class="eyebrow">โหลดบทความไม่สำเร็จ</p>';
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>บทความ — VanillaBuri วนิลาบุรี</title>
+<meta name="description" content="บทความความรู้เรื่องวานิลลาไทยจากวนิลาบุรี ตั้งแต่การปลูก การผสมเกสร จนถึงการบ่ม">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#1C1410; --espresso:#2A1D16; --panel:#251A13; --panel-line:#3B2A1F;
+    --cream:#F3EEDC; --cream-dim:#C9C2AC; --gold:#C9A15C; --gold-bright:#DDB876;
+    --serif:"Noto Serif Thai",serif; --sans:"IBM Plex Sans Thai",sans-serif; --mono:"IBM Plex Mono",monospace;
+    --max:1180px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--black);color:var(--cream);font-family:var(--sans);font-weight:300;line-height:1.7}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:var(--serif);font-weight:600}
+  header{position:sticky;top:0;z-index:50;background:rgba(28,20,16,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--panel-line)}
+  nav.wrap{display:flex;align-items:center;justify-content:space-between;height:76px}
+  .logo-img{height:48px;border-radius:6px;background:var(--cream)}
+  .back{font-size:.88rem;color:var(--cream-dim)}
+  .back:hover{color:var(--gold)}
+  .hero{padding:80px 0 50px}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+  .hero h1{font-size:clamp(1.9rem,4vw,2.6rem);margin-top:14px}
+  .hero p{color:var(--cream-dim);margin-top:14px;max-width:56ch}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;padding-bottom:100px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .card{border:1px solid var(--panel-line);transition:border-color .25s}
+  .card:hover{border-color:var(--gold)}
+  .card img{width:100%;height:170px;object-fit:cover;display:block}
+  .card-body{padding:24px}
+  .card .eyebrow{font-size:.62rem}
+  .card h3{font-family:var(--sans);font-weight:500;font-size:1.02rem;margin:12px 0 8px;color:var(--cream);line-height:1.5}
+  .card p{font-size:.86rem;color:var(--cream-dim)}
+  .card .date{font-family:var(--mono);font-size:.68rem;color:var(--cream-dim);margin-top:12px;display:block}
+  .empty{color:var(--cream-dim);font-size:.92rem;padding:40px 0}
+</style>
+</head>
+<body>
+<header>
+  <nav class="wrap">
+    <a href="index.html"><img class="logo-img" src="assets/logo.jpg" alt="VanillaBuri วนิลาบุรี"></a>
+    <a href="index.html" class="back">← กลับหน้าแรก</a>
+  </nav>
+</header>
+
+<section class="hero wrap">
+  <span class="eyebrow">ความรู้จากฟาร์ม</span>
+  <h1>บทความทั้งหมด</h1>
+  <p>เนื้อหาที่ค่อย ๆ สร้างความน่าเชื่อถือ ตั้งแต่การปลูกจนถึงการใช้งานในครัว</p>
+</section>
+
+<section class="wrap">
+  <div class="grid" id="postGrid">
+    <p class="empty">กำลังโหลดบทความ...</p>
+  </div>
+</section>
+
+<script>
+  fetch('content/posts.json')
+    .then(r => r.json())
+    .then(posts => {
+      const grid = document.getElementById('postGrid');
+      if (!posts.length) { grid.innerHTML = '<p class="empty">ยังไม่มีบทความ</p>'; return; }
+      posts.sort((a,b) => new Date(b.date) - new Date(a.date));
+      grid.innerHTML = posts.map(p => `
+        <a class="card" href="post.html?slug=${encodeURIComponent(p.slug)}">
+          <img src="${p.cover}" alt="${p.title}">
+          <div class="card-body">
+            <span class="eyebrow">${p.category}</span>
+            <h3>${p.title}</h3>
+            <p>${p.excerpt}</p>
+            <span class="date">${p.date}</span>
+          </div>
+        </a>
+      `).join('');
+    })
+    .catch(() => {
+      document.getElementById('postGrid').innerHTML = '<p class="empty">โหลดบทความไม่สำเร็จ ลองรีเฟรชหน้าอีกครั้ง</p>';
+    });
+</script>
+</body>
+</html>

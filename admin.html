@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แอดมิน — VanillaBuri</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#1C1410; --espresso:#2A1D16; --panel:#251A13; --panel-line:#3B2A1F;
+    --cream:#F3EEDC; --cream-dim:#C9C2AC; --gold:#C9A15C; --gold-bright:#DDB876;
+    --serif:"Noto Serif Thai",serif; --sans:"IBM Plex Sans Thai",sans-serif; --mono:"IBM Plex Mono",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--black);color:var(--cream);font-family:var(--sans);font-weight:300;line-height:1.7;padding-bottom:100px}
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px}
+  h1,h2{font-family:var(--serif);font-weight:700}
+  header{border-bottom:1px solid var(--panel-line);padding:26px 0;margin-bottom:36px}
+  header .wrap{display:flex;justify-content:space-between;align-items:center}
+  header h1{font-size:1.3rem}
+  header a{color:var(--cream-dim);text-decoration:none;font-size:.88rem}
+  .tabs{display:flex;gap:2px;margin-bottom:30px;border:1px solid var(--panel-line)}
+  .tab{flex:1;text-align:center;padding:14px;cursor:pointer;background:var(--panel);color:var(--cream-dim);font-size:.9rem}
+  .tab.active{background:var(--gold);color:var(--black);font-weight:500}
+  .panel{display:none}
+  .panel.active{display:block}
+  .card{border:1px solid var(--panel-line);padding:26px;margin-bottom:24px}
+  .card h2{font-size:1.05rem;margin-bottom:18px;font-weight:500;font-family:var(--sans)}
+  label{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;margin-top:16px}
+  label:first-of-type{margin-top:0}
+  input,textarea{width:100%;background:var(--espresso);border:1px solid var(--panel-line);color:var(--cream);font-family:var(--sans);font-size:.92rem;padding:10px 12px;border-radius:2px}
+  textarea{min-height:120px;resize:vertical;font-family:var(--mono);font-size:.82rem}
+  input:focus,textarea:focus{outline:none;border-color:var(--gold)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .btn{display:inline-block;padding:12px 22px;border-radius:2px;font-size:.9rem;font-weight:500;cursor:pointer;border:1px solid var(--panel-line);background:transparent;color:var(--cream);margin-top:20px;margin-right:10px}
+  .btn-gold{background:var(--gold);color:var(--black);border-color:var(--gold)}
+  .btn:hover{border-color:var(--gold)}
+  .post-list{display:grid;gap:10px;margin-bottom:20px}
+  .post-row{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--panel-line);padding:12px 16px;font-size:.88rem}
+  .post-row .meta{color:var(--cream-dim);font-family:var(--mono);font-size:.72rem}
+  .post-row button{background:none;border:1px solid var(--panel-line);color:var(--cream-dim);padding:6px 12px;border-radius:2px;cursor:pointer;font-size:.78rem;margin-left:8px}
+  .post-row button:hover{border-color:var(--gold);color:var(--gold)}
+  .output{margin-top:10px}
+  .output textarea{min-height:220px}
+  .note{font-size:.84rem;color:var(--cream-dim);border-left:2px solid var(--gold);padding:12px 16px;background:var(--panel);margin-bottom:20px}
+  .status{font-size:.82rem;color:var(--gold);margin-top:8px;min-height:18px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>VanillaBuri — แอดมิน</h1>
+    <a href="index.html">← กลับหน้าเว็บ</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="note">
+    หน้านี้ไม่ได้เผยแพร่ขึ้นเว็บอัตโนมัติ — ใช้กรอกข้อมูลแล้ว "คัดลอก" โค้ด JSON ที่ได้ไปวางทับไฟล์ที่เกี่ยวข้องบน GitHub แล้วกด Commit changes อีกทีครับ (ต้องเปิดหน้านี้ผ่านลิงก์เว็บจริง ไม่ใช่เปิดไฟล์ในเครื่อง ข้อมูลถึงจะโหลดได้)
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="posts">จัดการบทความ</div>
+    <div class="tab" data-tab="settings">ลิงก์โซเชียล</div>
+  </div>
+
+  <!-- POSTS PANEL -->
+  <div class="panel active" id="panel-posts">
+    <div class="card">
+      <h2>บทความทั้งหมด</h2>
+      <div class="post-list" id="postList"></div>
+      <button class="btn btn-gold" id="newPostBtn">+ เพิ่มบทความใหม่</button>
+    </div>
+
+    <div class="card">
+      <h2 id="formTitle">เพิ่มบทความใหม่</h2>
+      <label>Slug (ภาษาอังกฤษ ไม่มีเว้นวรรค ใช้ - แทนช่องว่าง)</label>
+      <input type="text" id="f-slug" placeholder="how-to-grow-vanilla">
+      <div class="row">
+        <div>
+          <label>หมวดหมู่</label>
+          <input type="text" id="f-category" placeholder="การปลูก">
+        </div>
+        <div>
+          <label>วันที่ (YYYY-MM-DD)</label>
+          <input type="text" id="f-date" placeholder="2026-02-01">
+        </div>
+      </div>
+      <label>ชื่อบทความ</label>
+      <input type="text" id="f-title">
+      <label>คำโปรย (1-2 ประโยค)</label>
+      <input type="text" id="f-excerpt">
+      <label>รูปปก (path ในโฟลเดอร์ assets)</label>
+      <input type="text" id="f-cover" placeholder="assets/vine-trellis.jpg">
+      <label>เนื้อหาบทความ (รองรับ Markdown เช่น **ตัวหนา**, ## หัวข้อ)</label>
+      <textarea id="f-body"></textarea>
+      <button class="btn btn-gold" id="savePostBtn">บันทึกลงรายการ</button>
+      <button class="btn" id="clearFormBtn">ล้างฟอร์ม</button>
+    </div>
+
+    <div class="card">
+      <h2>โค้ดสำหรับวางใน content/posts.json</h2>
+      <div class="output">
+        <textarea id="postsOutput" readonly></textarea>
+        <button class="btn btn-gold" onclick="copyOut('postsOutput')">คัดลอกโค้ด</button>
+        <div class="status" id="postsStatus"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS PANEL -->
+  <div class="panel" id="panel-settings">
+    <div class="card">
+      <h2>ลิงก์ติดต่อ</h2>
+      <label>LINE (ลิงก์เต็ม เช่น https://line.me/ti/p/xxxx)</label>
+      <input type="text" id="s-line">
+      <label>Facebook</label>
+      <input type="text" id="s-facebook">
+      <label>Instagram</label>
+      <input type="text" id="s-instagram">
+      <button class="btn btn-gold" id="saveSettingsBtn">อัปเดตโค้ด</button>
+    </div>
+    <div class="card">
+      <h2>โค้ดสำหรับวางใน content/settings.json</h2>
+      <div class="output">
+        <textarea id="settingsOutput" readonly></textarea>
+        <button class="btn btn-gold" onclick="copyOut('settingsOutput')">คัดลอกโค้ด</button>
+        <div class="status" id="settingsStatus"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let posts = [];
+  let editingIndex = null;
+
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  function copyOut(id) {
+    const el = document.getElementById(id);
+    el.select();
+    document.execCommand('copy');
+    const statusId = id === 'postsOutput' ? 'postsStatus' : 'settingsStatus';
+    document.getElementById(statusId).textContent = 'คัดลอกแล้ว — ไปวางทับไฟล์บน GitHub ได้เลย';
+    setTimeout(() => document.getElementById(statusId).textContent = '', 3000);
+  }
+
+  function renderPostList() {
+    const list = document.getElementById('postList');
+    if (!posts.length) { list.innerHTML = '<p style="color:var(--cream-dim);font-size:.88rem">ยังไม่มีบทความ</p>'; return; }
+    list.innerHTML = posts.map((p, i) => `
+      <div class="post-row">
+        <div>
+          ${p.title || '(ไม่มีชื่อ)'}<br>
+          <span class="meta">${p.slug} · ${p.date}</span>
+        </div>
+        <div>
+          <button onclick="editPost(${i})">แก้ไข</button>
+          <button onclick="deletePost(${i})">ลบ</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function updatePostsOutput() {
+    document.getElementById('postsOutput').value = JSON.stringify(posts, null, 2);
+  }
+
+  function editPost(i) {
+    editingIndex = i;
+    const p = posts[i];
+    document.getElementById('f-slug').value = p.slug || '';
+    document.getElementById('f-category').value = p.category || '';
+    document.getElementById('f-date').value = p.date || '';
+    document.getElementById('f-title').value = p.title || '';
+    document.getElementById('f-excerpt').value = p.excerpt || '';
+    document.getElementById('f-cover').value = p.cover || '';
+    document.getElementById('f-body').value = p.body || '';
+    document.getElementById('formTitle').textContent = 'แก้ไขบทความ';
+  }
+
+  function deletePost(i) {
+    if (!confirm('ลบบทความนี้ออกจากรายการ?')) return;
+    posts.splice(i, 1);
+    renderPostList();
+    updatePostsOutput();
+  }
+
+  document.getElementById('newPostBtn').addEventListener('click', () => {
+    editingIndex = null;
+    ['f-slug','f-category','f-date','f-title','f-excerpt','f-cover','f-body'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('formTitle').textContent = 'เพิ่มบทความใหม่';
+  });
+
+  document.getElementById('clearFormBtn').addEventListener('click', () => {
+    document.getElementById('newPostBtn').click();
+  });
+
+  document.getElementById('savePostBtn').addEventListener('click', () => {
+    const post = {
+      slug: document.getElementById('f-slug').value.trim(),
+      category: document.getElementById('f-category').value.trim(),
+      title: document.getElementById('f-title').value.trim(),
+      excerpt: document.getElementById('f-excerpt').value.trim(),
+      cover: document.getElementById('f-cover').value.trim(),
+      date: document.getElementById('f-date').value.trim(),
+      body: document.getElementById('f-body').value
+    };
+    if (!post.slug || !post.title) { alert('กรุณากรอกอย่างน้อย Slug และชื่อบทความ'); return; }
+    if (editingIndex !== null) {
+      posts[editingIndex] = post;
+    } else {
+      posts.push(post);
+    }
+    renderPostList();
+    updatePostsOutput();
+    document.getElementById('newPostBtn').click();
+  });
+
+  document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+    const settings = {
+      line: document.getElementById('s-line').value.trim(),
+      facebook: document.getElementById('s-facebook').value.trim(),
+      instagram: document.getElementById('s-instagram').value.trim()
+    };
+    document.getElementById('settingsOutput').value = JSON.stringify(settings, null, 2);
+  });
+
+  fetch('content/posts.json')
+    .then(r => r.json())
+    .then(data => { posts = data; renderPostList(); updatePostsOutput(); })
+    .catch(() => { document.getElementById('postList').innerHTML = '<p style="color:var(--cream-dim);font-size:.88rem">โหลดบทความเดิมไม่สำเร็จ (ต้องเปิดผ่านลิงก์เว็บจริง ไม่ใช่ไฟล์ในเครื่อง) เริ่มจากศูนย์ได้เลย</p>'; });
+
+  fetch('content/settings.json')
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById('s-line').value = data.line || '';
+      document.getElementById('s-facebook').value = data.facebook || '';
+      document.getElementById('s-instagram').value = data.instagram || '';
+      document.getElementById('settingsOutput').value = JSON.stringify(data, null, 2);
+    })
+    .catch(() => {});
+</script>
+</body>
+</html>
