@@ -46,9 +46,26 @@
   .output textarea{min-height:220px}
   .note{font-size:.84rem;color:var(--cream-dim);border-left:2px solid var(--gold);padding:12px 16px;background:var(--panel);margin-bottom:20px}
   .status{font-size:.82rem;color:var(--gold);margin-top:8px;min-height:18px}
+  #lockScreen{position:fixed;inset:0;background:var(--black);z-index:999;display:flex;align-items:center;justify-content:center}
+  #lockScreen .box{border:1px solid var(--panel-line);padding:40px;width:100%;max-width:360px;text-align:center}
+  #lockScreen h2{font-size:1.1rem;margin-bottom:20px;font-family:var(--sans);font-weight:500}
+  #lockScreen input{margin-bottom:14px;text-align:center}
+  #lockScreen .err{color:#c96b6b;font-size:.82rem;min-height:18px}
+  body.locked{overflow:hidden}
+  body.locked #mainContent{display:none}
 </style>
 </head>
-<body>
+<body class="locked">
+<div id="lockScreen">
+  <div class="box">
+    <h2>ใส่รหัสผ่านเพื่อเข้าหน้าแอดมิน</h2>
+    <input type="password" id="lockInput" placeholder="รหัสผ่าน">
+    <button class="btn btn-gold" id="lockBtn" style="width:100%">เข้าสู่ระบบ</button>
+    <div class="err" id="lockErr"></div>
+  </div>
+</div>
+
+<div id="mainContent">
 <header>
   <div class="wrap">
     <h1>VanillaBuri — แอดมิน</h1>
@@ -64,6 +81,7 @@
   <div class="tabs">
     <div class="tab active" data-tab="posts">จัดการบทความ</div>
     <div class="tab" data-tab="settings">ลิงก์โซเชียล</div>
+    <div class="tab" data-tab="sitemap">คู่มืออัปเดต Sitemap</div>
   </div>
 
   <!-- POSTS PANEL -->
@@ -131,9 +149,53 @@
       </div>
     </div>
   </div>
+
+  <!-- SITEMAP GUIDE PANEL -->
+  <div class="panel" id="panel-sitemap">
+    <div class="note">
+      ทุกครั้งที่ <strong>เพิ่มบทความใหม่</strong> ต้องมาทำ 4 ขั้นตอนนี้ด้วย ไม่งั้น Google จะไม่รู้ว่ามีบทความนี้อยู่ (บทความเก่าที่มีอยู่แล้วไม่ต้องทำซ้ำ)
+    </div>
+    <div class="card">
+      <h2>ขั้นตอน</h2>
+      <ol style="padding-left:20px;color:var(--cream-dim);font-size:.92rem;line-height:2">
+        <li>เพิ่ม/แก้บทความในแท็บ "จัดการบทความ" ให้เรียบร้อยก่อน (ต้องมี Slug ทุกบทความ)</li>
+        <li>กดปุ่ม "สร้างโค้ด Sitemap" ด้านล่างนี้ — ระบบจะสร้างโค้ดให้ครบทุกบทความอัตโนมัติ</li>
+        <li>คัดลอกโค้ดที่ได้ → ไปที่ไฟล์ <code style="color:var(--gold)">sitemap.xml</code> บน GitHub → กดไอคอนดินสอ</li>
+        <li>ลบเฉพาะส่วน <code style="color:var(--gold)">&lt;url&gt;...&lt;/url&gt;</code> ที่เป็นของบทความทั้งหมด (เก็บ 2 อันแรกที่เป็นหน้าแรกกับหน้า blog.html ไว้เหมือนเดิม อย่าลบ) แล้ววางโค้ดใหม่แทนที่ตรงนั้น ก่อนบรรทัด <code style="color:var(--gold)">&lt;/urlset&gt;</code> → Commit changes</li>
+      </ol>
+      <button class="btn btn-gold" id="genSitemapBtn">สร้างโค้ด Sitemap</button>
+    </div>
+    <div class="card">
+      <h2>โค้ดสำหรับวางใน sitemap.xml</h2>
+      <div class="output">
+        <textarea id="sitemapOutput" readonly></textarea>
+        <button class="btn btn-gold" onclick="copyOut('sitemapOutput')">คัดลอกโค้ด</button>
+        <div class="status" id="sitemapStatus"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
+<script>
+  // ตั้งรหัสผ่านตรงนี้ครับ — เปลี่ยนคำว่า "vanillaburi2026" เป็นรหัสที่คุณต้องการ
+  const ADMIN_PASSWORD = "vanillaburi2026";
+
+  if (sessionStorage.getItem('vb_admin_ok') === 'yes') {
+    document.body.classList.remove('locked');
+  }
+  document.getElementById('lockBtn').addEventListener('click', checkPassword);
+  document.getElementById('lockInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
+  function checkPassword() {
+    const val = document.getElementById('lockInput').value;
+    if (val === ADMIN_PASSWORD) {
+      sessionStorage.setItem('vb_admin_ok', 'yes');
+      document.body.classList.remove('locked');
+    } else {
+      document.getElementById('lockErr').textContent = 'รหัสผ่านไม่ถูกต้อง';
+    }
+  }
+
   let posts = [];
   let editingIndex = null;
 
@@ -150,7 +212,8 @@
     const el = document.getElementById(id);
     el.select();
     document.execCommand('copy');
-    const statusId = id === 'postsOutput' ? 'postsStatus' : 'settingsStatus';
+    const statusMap = { postsOutput: 'postsStatus', settingsOutput: 'settingsStatus', sitemapOutput: 'sitemapStatus' };
+    const statusId = statusMap[id];
     document.getElementById(statusId).textContent = 'คัดลอกแล้ว — ไปวางทับไฟล์บน GitHub ได้เลย';
     setTimeout(() => document.getElementById(statusId).textContent = '', 3000);
   }
@@ -236,6 +299,12 @@
     document.getElementById('settingsOutput').value = JSON.stringify(settings, null, 2);
   });
 
+  document.getElementById('genSitemapBtn').addEventListener('click', () => {
+    if (!posts.length) { document.getElementById('sitemapOutput').value = '(ยังไม่มีบทความในรายการ)'; return; }
+    const xml = posts.map(p => `  <url>\n    <loc>https://vanillaburi.github.io/post.html?slug=${p.slug}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>`).join('\n');
+    document.getElementById('sitemapOutput').value = xml;
+  });
+
   fetch('content/posts.json')
     .then(r => r.json())
     .then(data => { posts = data; renderPostList(); updatePostsOutput(); })
@@ -251,5 +320,6 @@
     })
     .catch(() => {});
 </script>
+</div>
 </body>
 </html>
